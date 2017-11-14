@@ -76,8 +76,9 @@ body {
   font-size: 1rem;
   font-weight: normal;
   line-height: 1.5;
-  color: #212529;
-  background-color: #fff; }
+  color: #bdc2c7;
+  background-color: #0b3c5d !important; 
+}
 
 [tabindex="-1"]:focus {
   outline: none !important; }

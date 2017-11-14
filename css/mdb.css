@@ -6565,6 +6565,7 @@ button:focus {
 .navbar {
   font-weight: 300;
   padding-right: 1rem !important;
+  background: #00899c !important;
 }
 
 .navbar form input {
