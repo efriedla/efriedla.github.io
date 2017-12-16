@@ -511,3 +511,11 @@ fieldset[disabled] .btn-primary:hover {
 .devicons {
   font-size: 5rem;
 }
+.contact_git{
+  font-size:50px !important;
+  color: black !important;
+}
+.contact_linkedin{
+  font-size:50px !important;
+  color: rgb(26, 10, 245) !important;
+}
