@@ -11,7 +11,8 @@ body {
 hr {
   max-width: 50px;
   border-width: 3px;
-  border-color: #06d7d9;
+  /* border-color: #06d7d9; */
+  border-color: #075c5c;
 }
 
 .typewrite {
@@ -53,7 +54,8 @@ p {
 }
 
 .bg-primary {
-  background-color: #06d7d9 !important;
+  /* background-color: #06d7d9 !important; */
+  background-color: #088f8f !important;
 }
 
 .bg-dark {
@@ -110,12 +112,14 @@ body {
 #mainNav .navbar-brand {
   font-weight: 700;
   text-transform: uppercase;
-  color: #06d7d9;
+  /* color: #06d7d9; */
+  color: #088f8f;
   font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
 }
 #mainNav .navbar-brand:focus,
 #mainNav .navbar-brand:hover {
-  color: #06d7d9;
+  /* color: #06d7d9; */
+  color:#088f8f;
 }
 #mainNav .navbar-toggle {
   font-size: 18px;
@@ -132,11 +136,13 @@ body {
 }
 #mainNav .navbar-nav > li.nav-item > a.nav-link:focus:hover,
 #mainNav .navbar-nav > li.nav-item > a.nav-link:hover {
-  color: #06d7d9;
+  /* color: #06d7d9; */
+  color: #088f8f;
 }
 #mainNav .navbar-nav > li.nav-item > a.nav-link:focus.active,
 #mainNav .navbar-nav > li.nav-item > a.nav-link.active {
-  color: #06d7d9 !important;
+  /* color: #06d7d9 !important; */
+  color: #088f8f !important;
   background-color: transparent;
 }
 #mainNav .navbar-nav > li.nav-item > a.nav-link:focus.active:hover,
@@ -440,8 +446,10 @@ fieldset[disabled] .btn-default:hover {
 
 .btn-primary {
   color: white;
-  border-color: #06d7d9;
-  background-color: #06d7d9;
+  /* border-color: #06d7d9;
+  background-color: #06d7d9; */
+  border-color: #088f8f;
+  background-color: #088f8f;
 }
 .btn-primary.focus,
 .btn-primary:focus {
@@ -518,4 +526,32 @@ fieldset[disabled] .btn-primary:hover {
 .contact_linkedin{
   font-size:50px !important;
   color: rgb(26, 10, 245) !important;
+}
+.parallax{
+  background-image: url("https://static.pexels.com/photos/173921/pexels-photo-173921.png");
+  
+      /* Set a specific height */
+  height: 500px; 
+ 
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+}
+.parallax2{
+  background-image: url("http://freedesignfile.com/upload/2016/06/Light-dots-with-blue-tech-background-vector-09.jpg");
+      /* Set a specific height */
+  height: 200px; 
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-top: -100px;
+
+}
+.centerWhite{
+  color: white;
+  padding-top: 10%;
+  padding-bottom: 10%;
 }
