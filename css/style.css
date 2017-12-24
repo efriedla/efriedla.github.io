@@ -542,7 +542,7 @@ fieldset[disabled] .btn-primary:hover {
 .parallax2{
   background-image: url("http://freedesignfile.com/upload/2016/06/Light-dots-with-blue-tech-background-vector-09.jpg");
       /* Set a specific height */
-  height: 200px; 
+  height: 150px; 
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
@@ -552,6 +552,17 @@ fieldset[disabled] .btn-primary:hover {
 }
 .centerWhite{
   color: white;
-  padding-top: 10%;
-  padding-bottom: 10%;
+  padding-top: 5%;
+  padding-bottom: 5%;
+}
+.parallax2s{
+  background-image: url("http://freedesignfile.com/upload/2016/06/Light-dots-with-blue-tech-background-vector-09.jpg");
+      /* Set a specific height */
+  height: 200px; 
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-top: -100px;
+
 }
