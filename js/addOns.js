@@ -10,4 +10,15 @@ $(document).ready(function(){
 		$("#"+tab_id).addClass('current');
 	});
 
+
+	// show email
+	// function showEmail() {
+	// 	alter("clicked");
+	// 	// $("#myEmail").innerHTML = "Hello World";
+	// }
+	$("#showEmail").click(function(){
+		
+		$("#myEmail").text("efriedla20852@gmail.com");
+    });
+
 });
