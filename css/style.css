@@ -602,3 +602,11 @@ ul.tabs li.current{
   max-height: 500px;
   width: 100%;
 }
+.tab-link{
+  border-bottom: solid;
+  border-right: solid;
+  min-width: 200px;
+}
+.tab-link:active{
+  background: rgb(253, 251, 251);
+}
