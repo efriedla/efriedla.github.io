@@ -14,5 +14,7 @@ $(document).ready(function(){
 	// show email
 	$("#showEmail").click(function(){
 		$("#myEmail").text("efriedla20852@gmail.com");
-    });
+	});
+	//tabs
+	
 });
