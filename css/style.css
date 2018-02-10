@@ -584,8 +584,8 @@ ul.tabs li{
 }
 
 ul.tabs li.current{
-  background: #ededed;
-  color: #222;
+  background: rgb(17, 92, 105) ;
+  color: rgb(252, 252, 252);
 }
 
 .tab-content{
@@ -608,5 +608,5 @@ ul.tabs li.current{
   min-width: 200px;
 }
 .tab-link:active{
-  background: rgb(253, 251, 251);
+  background: rgb(52, 200, 226) !important;
 }
