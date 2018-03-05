@@ -3,27 +3,133 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Liz Friedland | Web Developer</title>
+    <link href="css/landingpage.css" rel="stylesheet">
 </head>
 <body>
     <header>
         <h2>Elizabeth Friedland || Web Developer</h2>
     </header>
     <div class="row">
-        <div class="col s4">
-            <h2>About</h2>
+        <div class="col  s4">
+            <a class="activate " href="#about">About</a>
         </div>
         <div class="col s4">
-            <h2>Portfolio</h2>
+            <a class="activate " href="#portfolio">Portfolio</a>
         </div>
         <div class="col s4">
-            <h2>Contact</h2>
+            <a class="activate " href="#contact">Contact</a>
         </div>
     </div>
     <div id="about" class="row">
         <h5>About section</h5>
+        <p>Forward thinking, full stack developer with alacrity for new learn new technology. 
+            Capable of foreseeing possible shortcomings and craft logical and creative solutions. 
+            Passion for companies with a strong customer focus and a drive to get tasks done. 
+            Keeping a keen eye on trends in UX and design, and how they can best be implemented.
+        </p>
+       
+            <h4>SKILLS Programing Languages:</h4>
+            <p>JavaScript, SQL, Ruby, HTML/CSS, Python</p>
+           <h4> Frameworks:</h4>
+           <p> React, Node, Socket</p>
+           <h4> Libraries:</h4>
+            <p>jQuery, Bootstrap, Paper.js, Howler.js</p>
+            <h4>Databases:</h4>
+            <p>MongoDB, PostrgesSQL, mySQL</p>
+            <h4>Tools:</h4>
+            <p>Github, Heroku, Codepen, Visual Studio, Sublime Text, Terminal, Marvel, Wireframe, Photoshop</p>
+            <h4>Methodology:</h4>
+            <p>Responsive Web Development, JSON, TDD, RESTful, Agile, Scrum, AJAX, API, UX</p>
+            <h4>Other Skills:</h4>
+            <p>
+                    Project Management, MS Office suite, HIPPA certified, Ruby on Rails, es6, 
+                    Debugging, Driven, Leadership, Computer Science, continuous learner, can-do attitude.
+            </p>
+           <h3> EDUCATION</h3> 
+           <p>Cert Web Development Immersion,
+                General Assembly 2017</p>
+            <p>BA HR Management with a minor in Computer Science WestVirginia University 2015</p>
+            
     </div>
     <div id="portfolio" class="row">
-        <h5>Portfolio section</h5>
+        <h3 class="col offset-s1 offset-m4 ">Portfolio section</h3>
+        <div class="row">
+            <div class="col m6 s5 offset-s1">
+                    <div>
+                        <img src="http://g.recordit.co/GvW15betvn.gif" alt="padata">
+                        <p>This application was built with Paper.js, and Howler.js for sounds and shapes</p>
+                        <p>You can explore the live site <span href="https://efriedla.github.io/padata/">padata</span></p>
+                        <p>The code can be found here: <a href="https://github.com/efriedla/padata">github</span> </p>
+                    </div>
+            </div>
+            <div class="col m6 s5">
+                    <div>
+                        <img src="img/RD.png" alt="rainy day">
+                        <p>This application was built with a team using MongoDB, Express and React/Nodejs</p>
+                        <p>The code can be found here: <a href="https://github.com/efriedla/rainyday-1">github</span> </p>
+                        <p>Live site here: <a href="https://rainydaysavings.herokuapp.com/">RainyDay</a></p>
+                    </div>
+            </div>
+            <div class="col m6 s5 offset-s1">
+                    <div>
+                        <img src="img/shoppingListReact.png" alt="Shopping list">
+                        <p>This application was built with React/Nodejs and is hosted on Heroku</p>
+                        <p>You can explore the live site <a href="#">Heroku</a></p>
+                        <p>The code can be found here: <a href="https://github.com/efriedla/ShoppingLIst">github</a> </p> 
+                    </div>
+            </div>
+            <div class="col m6 s5">
+                    <div>
+                        <img src="http://g.recordit.co/sAJAjDFy6C.gif" alt="color game">
+                        <p>This is just a simple game I made while practicing Vanilla JS</p>
+                        <p>The code can be found here: <a href="https://github.com/efriedla/colorPickerGame">github</span> </p>
+                        <p>Live site here: <a href="https://efriedla.github.io/colorPickerGame/">colorGame</a></p>
+                    </div>
+            </div>
+        </div>
+            <!-- <div class="container portfolio ">
+                <h2>Portfolio</h2>  
+                    
+                        <ul class="tabs row">
+                            <li class="tab-link active col-lg-2 col-md-2 col-sm-2 col-xs-2  " data-tab="tab-1">padata</li>
+                            <li class="tab-link col-lg-2 col-md-2 col-sm-2 col-xs-2" data-tab="tab-2">MERN Stack Project</li>
+                            <li class="tab-link col-lg-2 col-md-2 col-sm-2 col-xs-2" data-tab="tab-3">React Shopping List</li>
+                            <li class="tab-link col-lg-2 col-md-2 col-sm-2 col-xs-2" data-tab="tab-4">Color Picker Practice</li>
+                            <li class="tab-link col-lg-2 col-md-2 col-sm-2 col-xs-2" data-tab="tab-5">React Practice</li>
+                        </ul>
+                        
+                        <div id="tab-1" class="tab-content current">
+                            <img src="http://g.recordit.co/GvW15betvn.gif" alt="padata">
+                            <p>This application was built with Paper.js, and Howler.js for sounds and shapes</p>
+                            <p>You can explore the live site <span href="https://efriedla.github.io/padata/">padata</span></p>
+                            <p>The code can be found here: <a href="https://github.com/efriedla/padata">github</span> </p>
+                        </div>
+                        <div id="tab-2" class="tab-content">
+                            <img src="img/RD.png" alt="rainy day">
+                            <p>This application was built with a team using MongoDB, Express and React/Nodejs</p>
+                            <p>The code can be found here: <a href="https://github.com/efriedla/rainyday-1">github</span> </p>
+                            <p>Live site here: <a href="https://rainydaysavings.herokuapp.com/">RainyDay</a></p>
+                        </div>
+                        
+                        <div id="tab-3" class="tab-content">
+                            <img src="img/shoppingListReact.png" alt="Shopping list">
+                            <p>This application was built with React/Nodejs and is hosted on Heroku</p>
+                            <p>You can explore the live site <a href="#">Heroku</a></p>
+                            <p>The code can be found here: <a href="https://github.com/efriedla/ShoppingLIst">github</a> </p>           
+                        </div>
+                        <div id="tab-4" class="tab-content">
+                            <img src="http://g.recordit.co/sAJAjDFy6C.gif" alt="color game">
+                            <p>This is just a simple game I made while practicing Vanilla JS</p>
+                            <p>The code can be found here: <a href="https://github.com/efriedla/colorPickerGame">github</span> </p>
+                            <p>Live site here: <a href="https://efriedla.github.io/colorPickerGame/">colorGame</a></p>
+                        </div>
+                        <div id="tab-5" class="tab-content">
+                            <img src="img/reactPr.png" alt="React Practice">
+                            <p>This application was built with React/Nodejs and is a collection of a react todo list, calculator, and a tic tac toe game.</p>
+                            <p>The code can be found here: <a href="https://github.com/efriedla/reactpractice">github</a> </p>           
+                        </div>
+                </div> -->
+             
 
     </div>
     <div id="contact" class="row">
