@@ -5,18 +5,32 @@ yellow #eafc40
 dark blue #254558
 dark purple #2b2b3a
  */
+ html {
+    width: 100vw;
+}
 .activate{
-    padding: 2px;
-    background-color: black;
     
+    /* background-color: black; */
+    
+}
+nav{
+    background-color: #2b2b3a;
+    color:#f4f5f6;
+    position: fixed;
+    z-index: 4;
+ 
 }
 img{
     width:100%;
 }
 .summery i{
     position: relative; 
-    top: 20px;
+    top: 25px;
     color:#1ed2f4;
+}
+.summery{
+    position: relative;
+    top: 66px;
 }
 .skill{
     /* position: relative; */
