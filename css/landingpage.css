@@ -1,3 +1,69 @@
+/* color scheme 
+light blue #1ed2f4
+white #f4f5f6
+yellow #eafc40
+dark blue #254558
+dark purple #2b2b3a
+ */
+
 img{
     width:100%;
 }
+.skill{
+    /* position: relative; */
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background-color: #2b2b3a;
+    border-radius: 50%;
+    padding-top:65px ;
+    color:#f4f5f6;
+    /* padding-left:-10px; */ 
+}
+.skill:hover{
+    background-color: #254558;
+}
+.create{
+    /* top: 159px;
+     left:3%; */
+     top: 189px;
+     left: 44%;
+}
+.adapt{
+    /* top: -122px;
+     left: 36%; */
+     top: 348px;
+     left: 30%;
+}
+.communicate{
+    /* top: -143px;
+    left: 70%; */
+    top: 348px;
+    left: 58%;
+}
+.ux{
+    /* top: -1px;
+    left:44%; */
+    top: 521px;
+    left:44%;
+}
+.test{
+    /* top: -253px;
+    left:21%; */
+    top: 356px;
+    left:44%;
+}
+.circleOfWork{
+    background-color:#f4f5f6;
+    height:575px;
+    max-width: 1299px;
+}
+.circleOfWork .box{
+    /* background-color: pink;
+    border: solid; */
+    height: 182px;
+
+}
+.center{
+    height: 535px;
+ }
