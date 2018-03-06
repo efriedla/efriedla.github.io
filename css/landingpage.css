@@ -83,13 +83,14 @@ img{
 }
 .circleOfWork{
     background-color:#f4f5f6;
-    height:575px;
+    height:695px;
     max-width: 1299px;
 }
 .circleOfWork .box{
     /* background-color: pink;
     border: solid; */
-    height: 182px;
+    height: 225px;
+    margin-bottom: 3px;
 
 }
 .center{
