@@ -5,53 +5,67 @@ yellow #eafc40
 dark blue #254558
 dark purple #2b2b3a
  */
-
+.activate{
+    padding: 2px;
+    background-color: black;
+    
+}
 img{
     width:100%;
+}
+.summery i{
+    position: relative; 
+    top: 20px;
+    color:#1ed2f4;
 }
 .skill{
     /* position: relative; */
     position: absolute;
     width: 150px;
     height: 150px;
-    background-color: #2b2b3a;
+    background-color: #254558;
     border-radius: 50%;
     padding-top:65px ;
     color:#f4f5f6;
     /* padding-left:-10px; */ 
 }
-.skill:hover{
-    background-color: #254558;
+.skill:hover, .circleOfWork i:hover{
+    /* background-color: #eafc40; */
+    color:#1ed2f4;
+    -webkit-box-shadow: 9px 13px 191px 0px #1ed2f4;
+    -moz-box-shadow: 9px 13px 191px 0px #1ed2f4;
+    box-shadow: 9px 13px 191px 0px #1ed2f4;
 }
 .create{
     /* top: 159px;
      left:3%; */
-     top: 189px;
+     top: 199px;
      left: 44%;
 }
 .adapt{
     /* top: -122px;
      left: 36%; */
-     top: 348px;
+     top: 358px;
      left: 30%;
 }
 .communicate{
     /* top: -143px;
     left: 70%; */
-    top: 348px;
+    top: 358px;
     left: 58%;
 }
 .ux{
     /* top: -1px;
     left:44%; */
-    top: 521px;
+    top: 531px;
     left:44%;
 }
-.test{
+.resume{
     /* top: -253px;
     left:21%; */
-    top: 356px;
+    top: 366px;
     left:44%;
+    padding-top:56px ;
 }
 .circleOfWork{
     background-color:#f4f5f6;
