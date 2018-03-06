@@ -23,6 +23,19 @@ nav{
 img{
     width:100%;
 }
+.fa img{
+    /* width: auto; */
+    /* padding-left: -1px !important; */
+    padding: -5px;
+  
+}
+.fa{
+    float: left;
+    width:16.6%;
+}
+br{
+    clear: both;
+}
 .summery i{
     position: relative; 
     top: 25px;
@@ -31,6 +44,7 @@ img{
 .summery{
     position: relative;
     top: 66px;
+    background-color:#f4f5f6;
 }
 .skill{
     /* position: relative; */
@@ -82,7 +96,8 @@ img{
     padding-top:56px ;
 }
 .circleOfWork{
-    background-color:#f4f5f6;
+    background-color:#2b2b3a;
+    color: #e9fc40c0;
     height:695px;
     max-width: 1299px;
 }
