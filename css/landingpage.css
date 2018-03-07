@@ -33,6 +33,10 @@ img{
     float: left;
     width:16.6%;
 }
+.flout1{
+    float: left;
+    width:10.6%;
+}
 .center-align img{
     max-height: 157px;
 }
@@ -114,3 +118,6 @@ br{
 .center{
     height: 535px;
  }
+.material-icons{
+    font-size:30px;
+}
