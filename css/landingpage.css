@@ -23,15 +23,18 @@ nav{
 img{
     width:100%;
 }
-.fa img{
+.flout img{
     /* width: auto; */
     /* padding-left: -1px !important; */
     padding: -5px;
   
 }
-.fa{
+.flout{
     float: left;
     width:16.6%;
+}
+.center-align img{
+    max-height: 157px;
 }
 br{
     clear: both;
