@@ -21,6 +21,12 @@ nav{
     z-index: 4;
  
 }
+/* .smallNav{
+    margin-bottom
+} */
+.moveup{
+    margin-top:-53px;
+}
 img{
     width:100%;
 }
