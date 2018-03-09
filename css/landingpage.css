@@ -84,7 +84,7 @@ br{
     color:#f4f5f6;
     /* padding-left:-10px; */ 
 }
-.skill:hover, .circleOfWork i:hover{
+.circlex:hover{
     /* background-color: #eafc40; */
     color:#1ed2f4;
     -webkit-box-shadow: 9px 13px 191px 0px #1ed2f4;
@@ -133,8 +133,11 @@ br{
     border: solid; */
     height: 225px;
     margin-bottom: 3px;
-
 }
+.circleOfWork .box:hover{
+    text-shadow: 4px 1px 30px #1ed2f4;
+}
+
 .center{
     height: 535px;
  }
