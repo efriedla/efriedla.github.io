@@ -21,9 +21,20 @@ nav{
     z-index: 4;
  
 }
-/* .smallNav{
-    margin-bottom
-} */
+.smallNav{
+    font-family: 'Crimson Text', serif;
+    background-color:#2b2b3a;
+    color: #e9fc40c0;
+    /* margin-top: -10; */
+    padding:77px 10px;
+}
+.smallNav a{
+    font-family: 'Rozha One', serif;
+    color:#2b98ad;
+}
+a{
+    color:#2b98ad;  
+}
 .moveup{
     margin-top:-61px;
 }
@@ -59,6 +70,8 @@ br{
     position: relative;
     top: 66px;
     background-color:#f4f5f6;
+    border-left: 1px solid #2b2b3a;
+    border-right: 1px solid #2b2b3a;
 }
 .skill{
     /* position: relative; */
