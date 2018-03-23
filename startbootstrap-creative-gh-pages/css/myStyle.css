@@ -1,0 +1,13 @@
+/* @media only screen and (max-width: 600px) {
+    body {
+        background-color: lightblue !important;
+    }
+}
+.problemImg{
+    height: 159px;
+} */
+.linkto{
+    z-index: 10 !important;
+    color: pink;
+    cursor: pointer;
+}
