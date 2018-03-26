@@ -49,7 +49,12 @@ h6 {
 .text-faded {
   color: rgba(255, 255, 255, 0.7);
 }
+.text-grade {
+  background: #02111D !important;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #02111D, #037BB5, #02111D ) !important;  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #02111D, #037BB5, #02111D) !important; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
+}
 section {
   padding: 8rem 0;
 }
@@ -175,6 +180,11 @@ header.masthead {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+
+  color: #02111D ;  /* fallback for old browsers */
+color: -webkit-linear-gradient(to right, #02111D, #037BB5, #02111D);  /* Chrome 10-25, Safari 5.1-6 */
+color: linear-gradient(to right, #02111D, #037BB5, #02111D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 header.masthead hr {
