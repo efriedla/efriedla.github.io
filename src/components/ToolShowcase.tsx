@@ -48,6 +48,7 @@ export function ToolShowcase({ meta }: { meta: ToolMeta }) {
           raw={meta.raw}
           file={meta.file}
           importLine={`// ${meta.file} — drop it in and import what you need`}
+          deps={meta.deps}
         />
       ) : (
         <div className="px-4 py-4 sm:px-6">

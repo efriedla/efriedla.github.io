@@ -16,10 +16,13 @@ export function CodePanel({
   raw,
   file,
   importLine,
+  deps = "One file · React only · no dependencies",
 }: {
   raw: string;
   file: string;
   importLine: string;
+  /** Stated plainly: what a copier has to install. */
+  deps?: string;
 }) {
   const [state, setState] = useState<State>({ tag: "loading" });
   const [copied, setCopied] = useState<"no" | "yes" | "failed">("no");
@@ -68,9 +71,7 @@ export function CodePanel({
     <div>
       <div className="flex flex-wrap items-center gap-3 border-b border-line px-4 py-3">
         <code className="font-mono text-xs text-ink-soft">{file}</code>
-        <span className="text-xs text-ink-faint">
-          One file · React only · no dependencies
-        </span>
+        <span className="text-xs text-ink-faint">{deps}</span>
         <div className="ms-auto flex items-center gap-2">
           <a
             href={raw}
