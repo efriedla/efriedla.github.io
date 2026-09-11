@@ -41,7 +41,6 @@ export default function Home() {
 
         <ul className="mt-7 flex list-none flex-wrap gap-2 p-0">
           {[
-            { href: `mailto:${site.email}`, label: "Email" },
             { href: site.github, label: "GitHub" },
             { href: site.linkedin, label: "LinkedIn" },
           ].map((l) => (
@@ -61,10 +60,10 @@ export default function Home() {
         <p className="mt-4 mb-0 text-sm text-ink-faint">
           Résumé on request —{" "}
           <a
-            href={`mailto:${site.email}?subject=${encodeURIComponent("Résumé request")}`}
+            href={site.linkedin}
             className="text-ink-soft underline underline-offset-2"
           >
-            ask by email
+            reach me on LinkedIn
           </a>
           .
         </p>
