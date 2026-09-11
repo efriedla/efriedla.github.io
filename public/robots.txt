@@ -3,3 +3,6 @@ Allow: /
 
 # The résumé is unlisted: reachable by direct link, kept out of search results.
 Disallow: /r/
+
+# A scan test, not a page for visitors.
+Disallow: /qr-test/
