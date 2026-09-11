@@ -8,7 +8,6 @@ import { join } from "node:path";
 
 const jobs = [
   { from: "src/loaders", to: "public/loader-source", ext: ".jsx" },
-  { from: "src/lib", to: "public/tool-source", only: ["ics.ts", "calendar-links.ts"] },
 ];
 
 for (const job of jobs) {

@@ -91,3 +91,28 @@ body {
   border: 1px solid var(--line-strong);
   border-radius: 0.375rem;
 }
+
+/* ---------- Collapsible tool entries ----------
+   The default disclosure triangle sits outside the summary's flex row and
+   can't be aligned with the title, so it's replaced by a marker element that
+   turns when the entry opens. */
+.tool-entry > summary {
+  list-style: none;
+}
+.tool-entry > summary::-webkit-details-marker {
+  display: none;
+}
+.tool-entry > summary:hover .tool-entry-marker {
+  color: var(--ink);
+}
+.tool-entry-marker {
+  display: inline-block;
+  font-size: 0.75rem;
+  transition: transform 0.15s ease;
+}
+.tool-entry[open] > summary .tool-entry-marker {
+  transform: rotate(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tool-entry-marker { transition: none; }
+}

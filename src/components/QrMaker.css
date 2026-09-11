@@ -13,52 +13,87 @@
   --qr-accent: #60a5fa;
   --qr-success: #34d399;
   --qr-error: #f87171;
+  /* Sunken wells (inputs, toggle rows, panels) and floating chrome (toast, CTA). */
+  --qr-well: rgba(8, 5, 18, 0.55);
+  --qr-float: rgba(20, 14, 36, 0.94);
+  --qr-hairline: rgba(255, 255, 255, 0.08);
+  --qr-track: rgba(255, 255, 255, 0.1);
+  --qr-tile-bg: #fff;
+  --qr-title-edge: #ede9fe;
+  --qr-shadow: rgba(0, 0, 0, 0.7);
+  --qr-error-text: #fca5a5;
+  --qr-warn-text: #fde68a;
+  --qr-warn-bg: rgba(251, 191, 36, 0.08);
+  --qr-warn-bg-strong: rgba(251, 191, 36, 0.18);
+  --qr-warn-border: rgba(251, 191, 36, 0.32);
 
-  position: fixed;
-  inset: 0;
+  /* One entry in a list of tools, not a page: the surface is bounded so more
+     tools can stack under it. It keeps its own weather inside those bounds. */
+  position: relative;
   background: var(--qr-bg);
   color: var(--qr-text);
-  overflow-y: auto;
-  overflow-x: hidden;
-  z-index: 1;
+  border-radius: 0 0 14px 14px;
+  overflow: hidden;
 }
 .qrm-page,
 .qrm-page * { box-sizing: border-box; }
 
+/* ---------- Light mode ----------
+   The page is entirely token-driven, so light mode is a token swap rather than
+   a parallel stylesheet. The dark tokens above are the base and light is the
+   override, gated on `not (prefers-color-scheme: dark)` so a viewer with no
+   stated preference gets light — the same rule globals.css uses.
+
+   Colours come from the app identity (ivory ground, navy ink) instead of a
+   generic white, so the tool doesn't read as a different product. The purple
+   and blue accents survive the swap — they were already mid-tone — but every
+   tint that relied on being *lighter than its backdrop* has to be re-pitched
+   darker here, which is what the alpha bumps below are doing. */
+@media not all and (prefers-color-scheme: dark) {
+.qrm-page {
+  --qr-bg: radial-gradient(1200px 600px at 50% -10%, rgba(37, 99, 235, 0.10) 0%, transparent 60%),
+           linear-gradient(180deg, #FFFCF6 0%, #F5F0E6 100%);
+  --qr-panel: rgba(255, 252, 246, 0.82);
+  --qr-panel-strong: #FFFCF6;
+  --qr-border: rgba(7, 38, 57, 0.16);
+  --qr-border-strong: rgba(124, 58, 173, 0.45);
+  --qr-text: #072639;
+  --qr-text-muted: rgba(7, 38, 57, 0.66);
+  --qr-text-faint: rgba(7, 38, 57, 0.40);
+  /* Darkened from the dark-mode values: #60a5fa and #34d399 are ~2:1 on ivory,
+     nowhere near readable as text or as a focus ring. */
+  --qr-accent: #2563eb;
+  --qr-success: #047857;
+  --qr-error: #dc2626;
+
+  /* Wells now sit *lighter* than the card, not darker — a dark well on an ivory
+     card reads as a hole punched in the page. */
+  --qr-well: rgba(7, 38, 57, 0.045);
+  --qr-float: rgba(255, 252, 246, 0.96);
+  --qr-hairline: rgba(7, 38, 57, 0.14);
+  --qr-track: rgba(7, 38, 57, 0.18);
+  --qr-title-edge: #072639;
+  /* Full-strength black shadows are the giveaway of a dark theme wearing light
+     paint; on ivory they only need to be a hint. */
+  --qr-shadow: rgba(7, 38, 57, 0.18);
+  --qr-error-text: #b91c1c;
+  --qr-warn-text: #92400e;
+  --qr-warn-bg: rgba(180, 83, 9, 0.08);
+  --qr-warn-bg-strong: rgba(180, 83, 9, 0.16);
+  --qr-warn-border: rgba(180, 83, 9, 0.28);
+}
+
+/* The swatch grid shows colours the user is picking *for the QR itself*, so the
+   white swatch has to stay distinguishable from an ivory card behind it. */
+.qrm-page .cf-swatch,
+.qrm-page .cf-chip {
+  border-color: rgba(7, 38, 57, 0.22);
+}
+}
+
+
 .qrm-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 36px 32px 140px;
-}
-
-.qrm-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: ui-monospace, Menlo, monospace;
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  color: var(--qr-text-muted);
-  background: none;
-  border: none;
-  padding: 6px 0;
-  margin-bottom: 16px;
-  cursor: pointer;
-}
-.qrm-back:hover { color: var(--qr-text); }
-.qrm-back::before { content: '←'; transition: transform 0.18s ease; }
-.qrm-back:hover::before { transform: translateX(-2px); }
-
-.qrm-title {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 1.6rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  background: linear-gradient(90deg, #ede9fe 0%, var(--qr-accent) 50%, #ede9fe 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin: 0 0 28px;
+  padding: 22px;
 }
 
 /* ---------- Tabs ---------- */
@@ -130,7 +165,7 @@
 }
 .qrm-input,
 .qrm-select {
-  background: rgba(8, 5, 18, 0.6);
+  background: var(--qr-well);
   border: 1px solid var(--qr-border);
   border-radius: 10px;
   color: var(--qr-text);
@@ -172,20 +207,16 @@
 .qrm-divider::before { content: '✦'; color: var(--qr-accent); }
 
 /* ---------- Color swatches ---------- */
-.qrm-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
-.qrm-swatch {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  position: relative;
-}
-.qrm-swatch:hover { transform: translateY(-2px); }
-.qrm-swatch.is-active {
-  box-shadow: 0 0 0 2px var(--qr-accent), 0 0 12px -2px var(--qr-accent);
-  transform: translateY(-1px);
+/* Contrast advisory for hand-picked colours. */
+.qrm-contrast-warn {
+  margin: 10px 0 0;
+  padding: 9px 12px;
+  background: var(--qr-warn-bg);
+  border: 1px solid var(--qr-warn-border);
+  border-radius: 9px;
+  color: var(--qr-warn-text);
+  font-size: 0.76rem;
+  line-height: 1.5;
 }
 
 /* ---------- Toggle ---------- */
@@ -195,7 +226,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 14px;
-  background: rgba(8, 5, 18, 0.5);
+  background: var(--qr-well);
   border: 1px solid var(--qr-border);
   border-radius: 10px;
   margin-top: 14px;
@@ -208,7 +239,7 @@
   width: 38px;
   height: 22px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--qr-track);
   position: relative;
   cursor: pointer;
   transition: background 0.18s ease;
@@ -243,7 +274,7 @@
   justify-content: center;
   gap: 4px;
   padding: 22px 16px;
-  background: rgba(8, 5, 18, 0.5);
+  background: var(--qr-well);
   border: 1px dashed var(--qr-border-strong);
   border-radius: 12px;
   color: var(--qr-text-muted);
@@ -273,7 +304,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px;
-  background: rgba(8, 5, 18, 0.5);
+  background: var(--qr-well);
   border: 1px solid var(--qr-border);
   border-radius: 12px;
 }
@@ -321,24 +352,24 @@
 .qrm-logo-remove:hover {
   background: rgba(248, 113, 113, 0.12);
   border-color: rgba(248, 113, 113, 0.45);
-  color: #fca5a5;
+  color: var(--qr-error-text);
 }
 
 .qrm-logo-hint {
   margin: 0;
   padding: 10px 12px;
-  background: rgba(251, 191, 36, 0.08);
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  background: var(--qr-warn-bg);
+  border: 1px solid var(--qr-warn-border);
   border-radius: 10px;
-  color: #fde68a;
+  color: var(--qr-warn-text);
   font-size: 0.78rem;
   line-height: 1.5;
 }
 .qrm-logo-hint-action {
-  background: rgba(251, 191, 36, 0.18);
-  border: 1px solid rgba(251, 191, 36, 0.4);
+  background: var(--qr-warn-bg-strong);
+  border: 1px solid var(--qr-warn-border);
   border-radius: 6px;
-  color: #fde68a;
+  color: var(--qr-warn-text);
   padding: 2px 8px;
   font: inherit;
   font-size: 0.75rem;
@@ -346,7 +377,7 @@
   margin-left: 4px;
   transition: background 0.15s ease;
 }
-.qrm-logo-hint-action:hover { background: rgba(251, 191, 36, 0.28); }
+.qrm-logo-hint-action:hover { background: var(--qr-warn-bg-strong); }
 
 /* ---------- Preview ---------- */
 .qrm-preview-head {
@@ -382,7 +413,7 @@
 }
 
 .qrm-preview-stage {
-  background: rgba(8, 5, 18, 0.4);
+  background: var(--qr-well);
   border: 1px solid var(--qr-border);
   border-radius: 12px;
   padding: 24px;
@@ -409,7 +440,7 @@
   max-width: 100%;
   height: auto !important;
   border-radius: 4px;
-  box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 24px -10px var(--qr-shadow);
 }
 .qrm-preview-canvas,
 .qrm-preview-canvas > div { max-width: 100%; min-width: 0; }
@@ -453,7 +484,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   margin-top: 18px;
-  background: rgba(8, 5, 18, 0.4);
+  background: var(--qr-well);
   border: 1px solid var(--qr-border);
   border-radius: 10px;
   padding: 14px;
@@ -515,7 +546,7 @@
   font-family: ui-monospace, Menlo, monospace;
   font-size: 0.72rem;
   color: var(--qr-text-muted);
-  background: rgba(8, 5, 18, 0.5);
+  background: var(--qr-well);
   border: 1px solid var(--qr-border);
   border-radius: 8px;
   padding: 8px 12px;
@@ -549,12 +580,12 @@
   transform: translateX(-50%) translateY(20px);
   z-index: 20;
   padding: 12px 20px;
-  background: rgba(20, 14, 36, 0.95);
+  background: var(--qr-float);
   border: 1px solid var(--qr-border-strong);
   border-radius: 12px;
   color: var(--qr-text);
   font-size: 0.85rem;
-  box-shadow: 0 14px 32px -12px rgba(0, 0, 0, 0.7),
+  box-shadow: 0 14px 32px -12px var(--qr-shadow),
               0 0 24px -8px var(--qr-accent);
   opacity: 0;
   pointer-events: none;
@@ -565,48 +596,12 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* ---------- Corner CTA (reuse pattern) ---------- */
-.qrm-corner-cta {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 10;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  background: rgba(20, 14, 36, 0.92);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--qr-border-strong);
-  border-radius: 999px;
-  color: var(--qr-text);
-  font-family: ui-monospace, Menlo, monospace;
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  text-decoration: none;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-}
-.qrm-corner-cta:hover {
-  transform: translateY(-2px);
-  border-color: var(--qr-accent);
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.7),
-              0 0 24px -6px var(--qr-accent);
-}
-.qrm-corner-cta::after {
-  content: '→';
-  transition: transform 0.18s ease;
-}
-.qrm-corner-cta:hover::after { transform: translateX(3px); }
-
 /* ---------- Responsive ---------- */
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .qrm-cols { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
-  .qrm-inner { padding: 14px 16px 32px; }
-  .qrm-back { margin-bottom: 10px; }
-  .qrm-title { font-size: 1.3rem; margin: 0 0 16px; }
+  .qrm-inner { padding: 14px; }
   .qrm-tabs { width: 100%; margin-bottom: 14px; }
   .qrm-tab { flex: 1; padding: 9px 8px; font-size: 0.82rem; justify-content: center; gap: 4px; }
   .qrm-cols { gap: 14px; }
@@ -629,8 +624,6 @@
   .qrm-export-buttons { grid-template-columns: 1fr; gap: 8px; }
   .qrm-encoded { flex-wrap: wrap; gap: 6px; }
   .qrm-encoded .val { width: 100%; white-space: normal; word-break: break-all; }
-  /* Hide the floating "back to app" pill on mobile — the "back to toolkit" link at top covers it. */
-  .qrm-corner-cta { display: none; }
   /* Show the jump buttons on mobile */
   .qrm-jump-btn {
     display: flex;
@@ -653,45 +646,54 @@
   .qrm-jump-down { background: rgba(168, 85, 247, 0.18); border-color: rgba(168, 85, 247, 0.55); }
 }
 
-/* ---------- Logo library picker ---------- */
-.qrm-logo-library {
-  margin-top: 12px;
+
+
+
+/* ---------- Colour field ---------- */
+.cf-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
-.qrm-logo-library-label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: rgba(203, 213, 225, 0.7);
-}
-.qrm-logo-library-row {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-.qrm-logo-library-tile {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  background: #fff;
-  border: 2px solid rgba(168, 85, 247, 0.25);
-  cursor: pointer;
-  padding: 4px;
+.cf-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: border-color 0.15s, transform 0.1s;
+  gap: 8px;
 }
-.qrm-logo-library-tile:hover {
-  border-color: #a855f7;
-  transform: translateY(-1px);
+.cf-chip {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid var(--qr-border-strong);
+  border-radius: 10px;
+  background: none;
+  cursor: pointer;
 }
-.qrm-logo-library-tile img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+.cf-chip::-webkit-color-swatch-wrapper { padding: 2px; }
+.cf-chip::-webkit-color-swatch { border: none; border-radius: 8px; }
+.cf-chip::-moz-color-swatch { border: none; border-radius: 8px; }
+.cf-hex {
+  flex: 1;
+  min-width: 0;
+  font-family: ui-monospace, Menlo, monospace;
+  text-transform: uppercase;
+}
+.cf-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cf-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px solid var(--qr-hairline);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.cf-swatch:hover { transform: translateY(-1px); }
+.cf-swatch[aria-pressed='true'] {
+  box-shadow: 0 0 0 2px var(--qr-accent);
 }

@@ -1,25 +1,23 @@
-import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react';
-import { useUser } from '../../context/UserContext';
-import { useIconLibrary, type LibraryIcon } from '../../utils/iconLibrary';
-import './QrMaker.css';
-import { BRAND_HEXES } from '../../theme/palette';
+"use client";
+
+import React, { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
+import { ColorField } from "./ColorField";
+import { buildIcs, type CalendarEvent } from "@/lib/ics";
+import { googleCalendarUrl } from "@/lib/calendar-links";
+import { contrastRatio, isInverted, QR_MIN_CONTRAST } from "@/lib/color";
+import "./QrMaker.css";
 
 type ErrorLevel = 'L' | 'M' | 'Q' | 'H';
-type Mode = 'link' | 'event';
+type Mode = 'link' | 'event' | 'gcal';
 
 const FG_SWATCHES = [
   '#000000', '#1f2937', '#a855f7', '#3b82f6',
   '#ec4899', '#10b981', '#f59e0b', '#ffffff',
-  // Brand palette
-  ...BRAND_HEXES,
 ];
 const BG_SWATCHES = [
   '#ffffff', '#f9fafb', '#f3f4f6', '#e5e7eb',
   '#d1d5db', '#1f2937', '#0f172a', '#000000',
-  // Brand palette
-  ...BRAND_HEXES,
 ];
 
 const SIZES = [
@@ -44,27 +42,25 @@ const MAX_BYTES: Record<ErrorLevel, number> = {
   H: 1273,
 };
 
-function formatICS(opts: {
+// The form collects wall-clock time with no zone attached, which is exactly
+// what `buildIcs` wants — it does the zone conversion itself. Passing the
+// viewer's IANA zone (rather than stamping a Z on the string) is the difference
+// between a 2:30pm appointment landing at 2:30pm and landing at 7:30am.
+function eventFrom(fields: {
   title: string;
   start: string;
   end: string;
   location: string;
   description: string;
-}): string {
-  const dt = (s: string) => s.replace(/[-:]/g, '').replace('.000', '');
-  const lines = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'BEGIN:VEVENT',
-    `SUMMARY:${opts.title || 'Event'}`,
-    opts.start ? `DTSTART:${dt(opts.start)}00Z` : '',
-    opts.end ? `DTEND:${dt(opts.end)}00Z` : '',
-    opts.location ? `LOCATION:${opts.location}` : '',
-    opts.description ? `DESCRIPTION:${opts.description}` : '',
-    'END:VEVENT',
-    'END:VCALENDAR',
-  ].filter(Boolean);
-  return lines.join('\n');
+}): CalendarEvent {
+  return {
+    title: fields.title,
+    start: fields.start,
+    end: fields.end || undefined,
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    location: fields.location || undefined,
+    description: fields.description || undefined,
+  };
 }
 
 function downloadDataUrl(dataUrl: string, filename: string) {
@@ -76,10 +72,7 @@ function downloadDataUrl(dataUrl: string, filename: string) {
   a.remove();
 }
 
-export const QrMaker: React.FC = () => {
-  const navigate = useNavigate();
-  const { isIdentified } = useUser();
-
+export function QrMaker() {
   const [mode, setMode] = useState<Mode>('link');
 
   // Link tab
@@ -113,8 +106,10 @@ export const QrMaker: React.FC = () => {
   const scrollToPreview = useCallback(() => {
     previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
+  // The tool no longer owns the scroll container — it sits in the page flow
+  // under the site header — so "back to form" scrolls the window to the form.
   const scrollToTop = useCallback(() => {
-    pageRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    pageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
   // Responsive preview size — shrinks on narrow phones so the QR fits without overflow.
@@ -135,14 +130,29 @@ export const QrMaker: React.FC = () => {
   const payload = useMemo(() => {
     if (mode === 'link') return url.trim();
     if (!evTitle && !evStart) return '';
-    return formatICS({
+    const ev = eventFrom({
       title: evTitle,
       start: evStart,
       end: evEnd,
       location: evLoc,
       description: evDesc,
     });
+    return mode === 'gcal' ? googleCalendarUrl(ev) : buildIcs(ev);
   }, [mode, url, evTitle, evStart, evEnd, evLoc, evDesc]);
+
+  // Free colour choice makes it easy to build a QR that looks great and cannot
+  // be scanned, so say so at the point of choosing rather than letting the user
+  // find out after printing it.
+  const contrastWarning = useMemo(() => {
+    const ratio = contrastRatio(fg, bg);
+    if (ratio < QR_MIN_CONTRAST) {
+      return `Low contrast (${ratio.toFixed(1)}:1) — scanners may fail. Aim for ${QR_MIN_CONTRAST}:1 or more.`;
+    }
+    if (isInverted(fg, bg)) {
+      return 'Light code on a dark background — modern phones cope, but some older scanners expect dark on light.';
+    }
+    return null;
+  }, [fg, bg]);
 
   const charCount = payload.length;
   const tooLong = charCount > MAX_BYTES[level];
@@ -202,10 +212,6 @@ export const QrMaker: React.FC = () => {
     }
   }, []);
 
-  const handleCornerCta = useCallback(() => {
-    navigate(isIdentified ? '/' : '/');
-  }, [isIdentified, navigate]);
-
   const handleLogoFile = useCallback((file: File | null) => {
     if (!file) return;
     if (!file.type.startsWith('image/')) {
@@ -231,14 +237,6 @@ export const QrMaker: React.FC = () => {
     if (logoInputRef.current) logoInputRef.current.value = '';
   }, []);
 
-  // Library icon → QR logo: encode SVG as a data URL so qrcode.react's imageSettings can use it directly.
-  const libraryIcons = useIconLibrary();
-  const useLibraryIconAsLogo = useCallback((icon: LibraryIcon) => {
-    const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(icon.svg);
-    setLogoSrc(dataUrl);
-    setLogoName(icon.name || 'Symbol');
-  }, []);
-
   // Build imageSettings only when logo enabled + loaded
   const previewLogoSize = Math.round(previewSize * 0.22);
   const fullLogoSize = Math.round(size * 0.22);
@@ -253,11 +251,6 @@ export const QrMaker: React.FC = () => {
   return (
     <div className="qrm-page" ref={pageRef}>
       <div className="qrm-inner">
-        <button type="button" className="qrm-back" onClick={() => navigate('/')}>
-          back to home
-        </button>
-        <h1 className="qrm-title">QR code maker</h1>
-
         <div className="qrm-tabs" role="tablist">
           <button
             type="button"
@@ -275,7 +268,16 @@ export const QrMaker: React.FC = () => {
             className={`qrm-tab${mode === 'event' ? ' is-active' : ''}`}
             onClick={() => setMode('event')}
           >
-            📅 Calendar Invite
+            📅 Calendar
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === 'gcal'}
+            className={`qrm-tab${mode === 'gcal' ? ' is-active' : ''}`}
+            onClick={() => setMode('gcal')}
+          >
+            🗓️ Google Calendar
           </button>
         </div>
 
@@ -285,7 +287,7 @@ export const QrMaker: React.FC = () => {
             {mode === 'link' ? (
               <>
                 <h2 className="qrm-card-header">Link</h2>
-                <p className="qrm-card-sub">Paste any URL. We'll generate the QR live as you type.</p>
+                <p className="qrm-card-sub">Paste any URL. We&apos;ll generate the QR live as you type.</p>
 
                 <div className="qrm-field">
                   <label className="qrm-label" htmlFor="qrm-url">URL *</label>
@@ -295,7 +297,7 @@ export const QrMaker: React.FC = () => {
                     type="url"
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    placeholder="https://clumpification.app"
+                    placeholder="https://example.com"
                     autoFocus
                   />
                 </div>
@@ -313,8 +315,14 @@ export const QrMaker: React.FC = () => {
               </>
             ) : (
               <>
-                <h2 className="qrm-card-header">Calendar Invite</h2>
-                <p className="qrm-card-sub">Encodes a vCalendar event. Most phone QR scanners offer "Add to calendar" automatically.</p>
+                <h2 className="qrm-card-header">
+                  {mode === 'gcal' ? 'Google Calendar invite' : 'Calendar invite'}
+                </h2>
+                <p className="qrm-card-sub">
+                  {mode === 'gcal'
+                    ? 'Encodes a Google Calendar link. Scanning opens the Google event composer, already filled in — works best on Android and anywhere signed into Google.'
+                    : 'Encodes a standard .ics event. Works with Apple Calendar, Outlook and most built-in phone scanners.'}
+                </p>
 
                 <div className="qrm-field">
                   <label className="qrm-label" htmlFor="qrm-evtitle">Event title *</label>
@@ -377,35 +385,24 @@ export const QrMaker: React.FC = () => {
             <div className="qrm-divider">Style</div>
 
             <div className="qrm-field">
-              <label className="qrm-label">Foreground</label>
-              <div className="qrm-swatches">
-                {FG_SWATCHES.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    aria-label={`Foreground ${c}`}
-                    className={`qrm-swatch${fg === c ? ' is-active' : ''}`}
-                    style={{ background: c }}
-                    onClick={() => setFg(c)}
-                  />
-                ))}
-              </div>
+              <ColorField
+                label="Foreground"
+                value={fg}
+                onChange={setFg}
+                swatches={FG_SWATCHES}
+              />
             </div>
             <div className="qrm-field">
-              <label className="qrm-label">Background</label>
-              <div className="qrm-swatches">
-                {BG_SWATCHES.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    aria-label={`Background ${c}`}
-                    className={`qrm-swatch${bg === c ? ' is-active' : ''}`}
-                    style={{ background: c }}
-                    onClick={() => setBg(c)}
-                  />
-                ))}
-              </div>
+              <ColorField
+                label="Background"
+                value={bg}
+                onChange={setBg}
+                swatches={BG_SWATCHES}
+              />
             </div>
+            {contrastWarning && (
+              <p className="qrm-contrast-warn" role="status">{contrastWarning}</p>
+            )}
 
             <div className="qrm-advanced">
             <div className="qrm-row-2">
@@ -468,6 +465,9 @@ export const QrMaker: React.FC = () => {
                   </button>
                 ) : (
                   <div className="qrm-logo-loaded">
+                    {/* A data URL from the viewer's own file, never a remote
+                        asset — there is nothing for next/image to optimise. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={logoSrc} alt="" className="qrm-logo-thumb" />
                     <div className="qrm-logo-meta">
                       <strong>{logoName}</strong>
@@ -485,24 +485,6 @@ export const QrMaker: React.FC = () => {
                   hidden
                   onChange={(e) => handleLogoFile(e.target.files?.[0] || null)}
                 />
-                {libraryIcons.length > 0 && (
-                  <div className="qrm-logo-library">
-                    <small className="qrm-logo-library-label">From symbol library</small>
-                    <div className="qrm-logo-library-row">
-                      {libraryIcons.map((icon) => (
-                        <button
-                          key={icon.id}
-                          type="button"
-                          className="qrm-logo-library-tile"
-                          onClick={() => useLibraryIconAsLogo(icon)}
-                          title={icon.name}
-                        >
-                          <img src={icon.thumbnail} alt={icon.name} />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
                 {showLevelHint && (
                   <p className="qrm-logo-hint">
                     Tip: bump <strong>Error correction</strong> to <strong>H</strong> so scanners
@@ -596,7 +578,7 @@ export const QrMaker: React.FC = () => {
 
               <div className="qrm-stats">
                 <div className="qrm-stat">
-                  <span className="v">{mode === 'link' ? 'Link' : 'Event'}</span>
+                  <span className="v">{mode === 'link' ? 'Link' : mode === 'gcal' ? 'Google event' : 'Event (.ics)'}</span>
                   <span className="l">Type</span>
                 </div>
                 <div className="qrm-stat">
@@ -644,15 +626,10 @@ export const QrMaker: React.FC = () => {
         </div>
       </div>
 
-      <button type="button" className="qrm-corner-cta" onClick={handleCornerCta}>
-        {isIdentified ? 'back to app' : 'log in for more'}
-      </button>
-
       <div className={`qrm-toast${toast ? ' is-visible' : ''}`} role="status" aria-live="polite">
         {toast}
       </div>
     </div>
   );
-};
+}
 
-export default QrMaker;

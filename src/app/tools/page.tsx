@@ -1,38 +1,37 @@
 import type { Metadata } from "next";
-import { ToolShowcase } from "@/components/ToolShowcase";
-import { tools } from "@/lib/tools";
+import { QrMaker } from "@/components/QrMaker";
+import { ToolEntry } from "@/components/ToolEntry";
 
 export const metadata: Metadata = {
   title: "Tools",
   description:
-    "Small, dependency-free utilities for things that look simple and are not — starting with calendar events. Copy the file.",
+    "Small browser tools that do the whole job in the tab — starting with a QR code maker for links and calendar events.",
 };
 
 export default function ToolsPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
       <header className="mb-10">
         <p className="m-0 text-xs font-semibold uppercase tracking-wide text-accent">
-          Code you can take
+          Working tools
         </p>
         <h1 className="mt-2 mb-0 text-3xl font-semibold tracking-tight sm:text-4xl">
           Tools
         </h1>
-        <p className="mt-4 mb-0 text-[1.0625rem] leading-relaxed text-ink-soft">
-          Utilities for formats that look simple and are not. Each one is a
-          single file with no runtime dependency, and each exists because the
-          obvious implementation is subtly wrong in a way that still appears to
-          work.
-        </p>
-        <p className="mt-4 mb-0 text-[0.9375rem] leading-relaxed text-ink-soft">
-          Change the fields and watch the output. Then take the file.
+        <p className="mt-4 mb-0 max-w-2xl text-[1.0625rem] leading-relaxed text-ink-soft">
+          Each one runs entirely in this tab — nothing is uploaded, nothing is
+          stored, and none of them ask you to sign in. Open one to use it.
         </p>
       </header>
 
-      <div className="grid gap-10">
-        {tools.map((meta) => (
-          <ToolShowcase key={meta.slug} meta={meta} />
-        ))}
+      <div className="grid gap-8">
+        <ToolEntry
+          title="QR code maker"
+          tagline="Links and calendar events, styled and downloadable"
+          defaultOpen
+        >
+          <QrMaker />
+        </ToolEntry>
       </div>
     </div>
   );
