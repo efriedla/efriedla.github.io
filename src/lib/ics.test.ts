@@ -4,6 +4,7 @@ import {
   escapeText,
   foldLine,
   formatFloating,
+  isWallTime,
   zonedWallTimeToUtc,
 } from "./ics";
 
@@ -131,5 +132,27 @@ describe("buildIcs", () => {
     const ics = buildIcs({ ...base, timeZone: "floating" }, NOW);
     expect(ics).toContain("DTSTART:20260915T143000");
     expect(ics).not.toContain("DTSTART:20260915T143000Z");
+  });
+});
+
+describe("isWallTime", () => {
+  // The QR maker rebuilds its payload on every keystroke, so it sees the
+  // date field in every partial state a person types through. Building an
+  // event from one of those throws, and a throw inside a render blanks the
+  // page — hence the guard, and hence this test.
+  it("accepts a complete datetime-local value", () => {
+    expect(isWallTime("2026-09-15T14:30")).toBe(true);
+    expect(isWallTime("2026-09-15T14:30:45")).toBe(true);
+  });
+
+  it("rejects empty and half-typed values", () => {
+    for (const partial of ["", "2026", "2026-09", "2026-09-15", "2026-09-15T", "2026-09-15T14"]) {
+      expect(isWallTime(partial)).toBe(false);
+    }
+  });
+
+  it("guards the call that would otherwise throw", () => {
+    expect(() => buildIcs({ title: "Coffee", start: "", timeZone: "UTC" })).toThrow();
+    expect(isWallTime("")).toBe(false);
   });
 });

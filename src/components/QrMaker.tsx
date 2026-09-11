@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 import { ColorField } from "./ColorField";
-import { buildIcs, type CalendarEvent } from "@/lib/ics";
+import { buildIcs, isWallTime, type CalendarEvent } from "@/lib/ics";
 import { googleCalendarUrl } from "@/lib/calendar-links";
 import { contrastRatio, isInverted, QR_MIN_CONTRAST } from "@/lib/color";
 import "./QrMaker.css";
@@ -56,7 +56,9 @@ function eventFrom(fields: {
   return {
     title: fields.title,
     start: fields.start,
-    end: fields.end || undefined,
+    // A half-typed end would throw the same way a half-typed start does; drop
+    // it and let the event stand on its start until the field is complete.
+    end: isWallTime(fields.end) ? fields.end : undefined,
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     location: fields.location || undefined,
     description: fields.description || undefined,
@@ -129,7 +131,9 @@ export function QrMaker() {
   // Compute encoded payload
   const payload = useMemo(() => {
     if (mode === 'link') return url.trim();
-    if (!evTitle && !evStart) return '';
+    // Every calendar payload needs a start: buildIcs and the Google link both
+    // throw on a missing or half-typed one, and this runs on every keystroke.
+    if (!isWallTime(evStart)) return '';
     const ev = eventFrom({
       title: evTitle,
       start: evStart,
@@ -153,6 +157,10 @@ export function QrMaker() {
     }
     return null;
   }, [fg, bg]);
+
+  // An event needs a start before anything can be encoded. Saying so beats an
+  // empty stage that looks broken once the title is already typed.
+  const needsStart = mode !== 'link' && !isWallTime(evStart);
 
   const charCount = payload.length;
   const tooLong = charCount > MAX_BYTES[level];
@@ -337,7 +345,7 @@ export function QrMaker() {
                 </div>
                 <div className="qrm-row-2">
                   <div className="qrm-field">
-                    <label className="qrm-label" htmlFor="qrm-evstart">Starts</label>
+                    <label className="qrm-label" htmlFor="qrm-evstart">Starts *</label>
                     <input
                       id="qrm-evstart"
                       className="qrm-input"
@@ -522,7 +530,11 @@ export function QrMaker() {
                 {!payload && (
                   <div className="qrm-preview-empty">
                     <span style={{ fontSize: '1.6rem', opacity: 0.5 }}>◳</span>
-                    <span>Fill in the form — your QR shows up here.</span>
+                    <span>
+                      {needsStart
+                        ? 'Pick a start time — an event can\u2019t be encoded without one.'
+                        : 'Fill in the form — your QR shows up here.'}
+                    </span>
                   </div>
                 )}
                 {payload && tooLong && (

@@ -49,7 +49,7 @@ export function formatUtc(date: Date): string {
 
 /** `20260915T143000` — a floating time, deliberately without a zone. */
 export function formatFloating(wall: string): string {
-  const m = wall.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  const m = wall.match(WALL_TIME);
   if (!m) throw new Error(`Not a datetime-local value: ${wall}`);
   const [, y, mo, d, h, mi] = m;
   return `${y}${mo}${d}T${h}${mi}00`;
@@ -75,13 +75,25 @@ function offsetAt(instant: number, timeZone: string): number {
   return asUtc - instant;
 }
 
+/** Matches a `datetime-local` value: "2026-09-15T14:30", seconds optional. */
+const WALL_TIME = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/;
+
+/**
+ * Whether a string is usable as an event time. An empty or half-typed
+ * `datetime-local` reaches here on every keystroke, and building an event from
+ * one throws — callers should ask before they build.
+ */
+export function isWallTime(value: string): boolean {
+  return WALL_TIME.test(value);
+}
+
 /**
  * A `datetime-local` input is wall time with no zone attached. Reading it as
  * UTC — appending `Z` to the typed digits — shifts every event by the zone's
  * offset, which is how a 2:30 PM appointment becomes 7:30 AM.
  */
 export function zonedWallTimeToUtc(wall: string, timeZone: string): Date {
-  const m = wall.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  const m = wall.match(WALL_TIME);
   if (!m) throw new Error(`Not a datetime-local value: ${wall}`);
   const [, y, mo, d, h, mi] = m.map(Number) as unknown as number[];
   const asIfUtc = Date.UTC(y!, mo! - 1, d!, h!, mi!);
