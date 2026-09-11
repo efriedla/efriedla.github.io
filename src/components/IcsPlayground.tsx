@@ -13,17 +13,27 @@ const subscribeNever = () => () => {};
  * obvious in the payload, so the playground shows both at once.
  */
 export function IcsPlayground({ variant }: { variant: "ics" | "links" }) {
-  const [title, setTitle] = useState("Teeth cleaning");
+  const [title, setTitle] = useState("Interview");
   const [start, setStart] = useState("2026-09-15T14:30");
   const [end, setEnd] = useState("2026-09-15T15:15");
   const [location, setLocation] = useState("123 Main St, Suite 4");
+  const [url, setUrl] = useState("https://efriedla.github.io");
+  const [notes, setNotes] = useState("Bring two copies of the résumé.");
 
   const mounted = useSyncExternalStore(subscribeNever, () => true, () => false);
   const zone = mounted ? Intl.DateTimeFormat().resolvedOptions().timeZone : null;
 
   const codes = useMemo(() => {
     if (!zone) return null;
-    const event: CalendarEvent = { title, start, end, location, timeZone: zone };
+    const event: CalendarEvent = {
+      title,
+      start,
+      end,
+      location,
+      timeZone: zone,
+      url: url.trim() || undefined,
+      description: notes.trim() || undefined,
+    };
     if (variant === "ics") {
       return [{ label: "Event payload", payload: buildIcs(event) }];
     }
@@ -31,7 +41,7 @@ export function IcsPlayground({ variant }: { variant: "ics" | "links" }) {
       { label: "Google Calendar", payload: googleCalendarUrl(event) },
       { label: "Outlook", payload: outlookCalendarUrl(event) },
     ];
-  }, [variant, title, start, end, location, zone]);
+  }, [variant, title, start, end, location, url, notes, zone]);
 
   const icsHref = useMemo(() => {
     if (variant !== "ics" || !codes) return null;
@@ -76,6 +86,27 @@ export function IcsPlayground({ variant }: { variant: "ics" | "links" }) {
             className={field}
             value={end}
             onChange={(e) => setEnd(e.target.value)}
+          />
+        </label>
+        <label className="grid gap-1 text-xs text-ink-soft sm:col-span-2">
+          Link — added as URL on the event
+          <input
+            type="url"
+            inputMode="url"
+            className={field}
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="https://…"
+          />
+        </label>
+        <label className="grid gap-1 text-xs text-ink-soft sm:col-span-2">
+          Notes — press return, and watch the line break escape
+          <textarea
+            rows={2}
+            className={`${field} resize-y`}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Anything the invitee should know"
           />
         </label>
       </div>

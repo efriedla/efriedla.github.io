@@ -38,6 +38,15 @@ function range(event: CalendarEvent): string {
   return `${start}/${end}`;
 }
 
+/**
+ * Neither template accepts a dedicated URL parameter, so a link belongs in the
+ * body text. Silently dropping it would be the alternative.
+ */
+function details(event: CalendarEvent): string | undefined {
+  const parts = [event.description, event.url].filter(Boolean);
+  return parts.length ? parts.join("\n\n") : undefined;
+}
+
 export function googleCalendarUrl(event: CalendarEvent): string {
   const p = new URLSearchParams({
     action: "TEMPLATE",
@@ -45,7 +54,8 @@ export function googleCalendarUrl(event: CalendarEvent): string {
     dates: range(event),
   });
   if (event.location) p.set("location", event.location);
-  if (event.description) p.set("details", event.description);
+  const body = details(event);
+  if (body) p.set("details", body);
   return `https://calendar.google.com/calendar/render?${p.toString()}`;
 }
 
@@ -61,6 +71,7 @@ export function outlookCalendarUrl(event: CalendarEvent): string {
     enddt: iso(end!),
   });
   if (event.location) p.set("location", event.location);
-  if (event.description) p.set("body", event.description);
+  const body = details(event);
+  if (body) p.set("body", body);
   return `https://outlook.live.com/calendar/0/deeplink/compose?${p.toString()}`;
 }

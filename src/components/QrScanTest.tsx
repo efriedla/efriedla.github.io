@@ -14,7 +14,7 @@ import { googleCalendarUrl, outlookCalendarUrl } from "@/lib/calendar-links";
 const subscribeNever = () => () => {};
 
 export function QrScanTest() {
-  const [title, setTitle] = useState("Teeth cleaning");
+  const [title, setTitle] = useState("Interview");
   const [start, setStart] = useState("2026-09-15T14:30");
   const [end, setEnd] = useState("2026-09-15T15:15");
   const [location, setLocation] = useState("123 Main St, Suite 4");
