@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node scripts/copy-loaders.mjs && next dev",
-    "prebuild": "node scripts/copy-loaders.mjs",
+    "dev": "node scripts/copy-sources.mjs && next dev",
+    "prebuild": "node scripts/copy-sources.mjs",
     "build": "next build",
     "postbuild": "touch out/.nojekyll",
     "lint": "eslint .",
