@@ -65,6 +65,27 @@ function eventFrom(fields: {
   };
 }
 
+/** The next half hour, and an hour after it — a sane default for a new event. */
+function defaultStart(): string {
+  if (typeof window === 'undefined') return '';
+  const d = new Date();
+  d.setSeconds(0, 0);
+  d.setMinutes(d.getMinutes() > 30 ? 60 : 30);
+  return toLocalInput(d);
+}
+
+function defaultEnd(): string {
+  const start = defaultStart();
+  if (!start) return '';
+  return toLocalInput(new Date(new Date(start).getTime() + 60 * 60 * 1000));
+}
+
+/** A Date as a `datetime-local` input wants it: local wall time, no zone. */
+function toLocalInput(d: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 function downloadDataUrl(dataUrl: string, filename: string) {
   const a = document.createElement('a');
   a.href = dataUrl;
@@ -83,8 +104,17 @@ export function QrMaker() {
 
   // Event tab
   const [evTitle, setEvTitle] = useState('');
-  const [evStart, setEvStart] = useState('');
-  const [evEnd, setEvEnd] = useState('');
+  // Safari paints an empty datetime-local as today's date and time, so the
+  // field reads as filled while its value is still "" — and the preview then
+  // refuses to encode an event whose start looks, on screen, already chosen.
+  // Seeding real values makes the state match what the field shows, and the
+  // calendar tabs open with a live QR rather than an empty stage.
+  //
+  // Computed per client render, never on the server: a value baked in at build
+  // time would be stale by the time anyone loaded the page. The server renders
+  // an empty field and the inputs below carry suppressHydrationWarning.
+  const [evStart, setEvStart] = useState(defaultStart);
+  const [evEnd, setEvEnd] = useState(defaultEnd);
   const [evLoc, setEvLoc] = useState('');
   const [evDesc, setEvDesc] = useState('');
 
@@ -349,6 +379,7 @@ export function QrMaker() {
                     <input
                       id="qrm-evstart"
                       className="qrm-input"
+                      suppressHydrationWarning
                       type="datetime-local"
                       value={evStart}
                       onChange={(e) => setEvStart(e.target.value)}
@@ -359,6 +390,7 @@ export function QrMaker() {
                     <input
                       id="qrm-evend"
                       className="qrm-input"
+                      suppressHydrationWarning
                       type="datetime-local"
                       value={evEnd}
                       onChange={(e) => setEvEnd(e.target.value)}
