@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# The résumé is unlisted: reachable by direct link, kept out of search results.
+Disallow: /r/

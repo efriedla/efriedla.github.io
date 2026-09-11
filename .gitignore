@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+node_modules
+
+# Private source material — not for a public repo.
+# The .docx contains a cover letter addressed to a specific company.
+*.docx
+*.pages
+PORTFOLIO_INVENTORY.md
+scripts/resume-preview.html
