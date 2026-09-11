@@ -110,18 +110,12 @@ export default function Home() {
             <p className="mt-3 mb-0 text-sm text-ink-faint">
               In progress — the data layer is being built in the open.
             </p>
-            <p className="mt-3 mb-0 flex flex-wrap gap-x-4">
+            <p className="mt-3 mb-0">
               <a
                 href="https://github.com/efriedla/Pill-Price"
                 className="text-sm text-accent no-underline"
               >
                 Source →
-              </a>
-              <a
-                href="https://efriedla.github.io/Pill-Price/"
-                className="text-sm text-accent no-underline"
-              >
-                Storybook →
               </a>
             </p>
           </article>
