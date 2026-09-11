@@ -44,7 +44,7 @@ const html = `<!doctype html><meta charset="utf-8"><title>${esc(site.name)} — 
 </style>
 <h1>${esc(site.name)}</h1>
 <p class="role">${esc(site.role)}</p>
-<p class="contact">${esc(site.email)} · ${esc(site.url.replace("https://", ""))} · ${esc(site.github.replace("https://", ""))}</p>
+<p class="contact">${esc(site.url.replace("https://", ""))} · ${esc(site.github.replace("https://", ""))} · ${esc(site.linkedin.replace("https://www.", "").replace(/\/$/, ""))}</p>
 
 <h2>Summary</h2>
 <p class="sum">${esc(summary)}</p>

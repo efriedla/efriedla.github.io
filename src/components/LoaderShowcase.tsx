@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import { LabRunLoader } from "@/loaders/LabRunLoader";
 import { PillShotLoader } from "@/loaders/PillShotLoader";
 import { PillSortLoader } from "@/loaders/PillSortLoader";
 import { CodePanel } from "./CodePanel";
@@ -8,6 +9,7 @@ import type { LoaderMeta } from "@/lib/loaders";
 import type { LoaderProps } from "@/loaders/loader-props";
 
 const components: Record<string, React.ComponentType<LoaderProps>> = {
+  "lab-run": LabRunLoader,
   "pill-shot": PillShotLoader,
   "pill-sort": PillSortLoader,
 };

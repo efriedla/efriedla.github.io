@@ -16,6 +16,23 @@ export type LoaderMeta = {
 
 export const loaders: LoaderMeta[] = [
   {
+    slug: "lab-run",
+    name: "Lab Run",
+    tagline: "Pixel runner loader",
+    about:
+      "A white lab mouse runs a shelf and jumps the pills in its way, getting faster the longer the wait lasts. Every sprite is built from code at startup — ellipses and runs of pixels drawn into a grid — so the whole thing ships as one file with no image assets at all.",
+    notes: [
+      "Sprites are generated, not drawn: no PNG, no sprite sheet, nothing to load before the loader can appear.",
+      "Jump height responds to how long the key is held, so the control has range rather than one fixed arc.",
+      "Takes focus on mount, so the keyboard works without clicking first — turn autoFocus off if it is not the main thing on screen.",
+      "Honours prefers-reduced-motion, and the status region announces politely rather than interrupting.",
+    ],
+    keys: "Space / Up / W jump (hold for height) · Down / S duck",
+    file: "LabRunLoader.jsx",
+    raw: "/loader-source/LabRunLoader.jsx",
+    importLine: 'import { LabRunLoader } from "@/ui/LabRunLoader";',
+  },
+  {
     slug: "pill-shot",
     name: "Pill Shot",
     tagline: "Canvas arcade loader",
