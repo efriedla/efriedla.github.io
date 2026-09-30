@@ -697,3 +697,27 @@
 .cf-swatch[aria-pressed='true'] {
   box-shadow: 0 0 0 2px var(--qr-accent);
 }
+
+/* Logo drop target while a file is dragged over it, and the clipboard button
+   beneath it (shown only where the browser can read images on a click). */
+.qrm-logo-drop.is-over {
+  background: rgba(168, 85, 247, 0.08);
+  border-color: var(--qr-accent);
+  color: var(--qr-text);
+}
+.qrm-logo-paste {
+  align-self: center;
+  padding: 7px 14px;
+  background: transparent;
+  border: 1px solid var(--qr-border);
+  border-radius: 999px;
+  color: var(--qr-text-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.18s ease, color 0.18s ease;
+}
+.qrm-logo-paste:hover {
+  border-color: var(--qr-accent);
+  color: var(--qr-text);
+}

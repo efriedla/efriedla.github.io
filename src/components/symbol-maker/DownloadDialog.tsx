@@ -6,7 +6,7 @@ import {
   DownloadScope, DownloadSettings, MAX_PADDING, Rect, clampPx, defaultDownload, fileNameFor, loadDownload,
   padRegion, resizeLocked, saveDownload, sizeForShape, viewBoxFor,
 } from './downloadLayout';
-import { CAN_COPY_IMAGE, copyPngToClipboard } from './clipboardImage';
+import { CAN_COPY_IMAGE, copyPngToClipboard } from '@/lib/clipboardImage';
 import { Dialog, Icon } from './ui';
 
 // The export dialog: choose what to include, at exactly what size, then copy

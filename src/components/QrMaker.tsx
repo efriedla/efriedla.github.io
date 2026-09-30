@@ -6,10 +6,32 @@ import { ColorField } from "./ColorField";
 import { buildIcs, isWallTime, type CalendarEvent } from "@/lib/ics";
 import { googleCalendarUrl } from "@/lib/calendar-links";
 import { contrastRatio, isInverted, QR_MIN_CONTRAST } from "@/lib/color";
+import { CAN_READ_CLIPBOARD, blobToDataUrl, imageFromPasteEvent, readImageFromClipboard } from "@/lib/clipboardImage";
 import "./QrMaker.css";
 
 type ErrorLevel = 'L' | 'M' | 'Q' | 'H';
 type Mode = 'link' | 'event' | 'gcal';
+
+const LOGO_PASTE_MAX = 512;
+
+/** Redraw an image so its longest side is at most `max` px, as a PNG. Smaller images pass through untouched. */
+function shrinkImage(dataUrl: string, max: number): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const longest = Math.max(img.naturalWidth, img.naturalHeight);
+      if (longest <= max) { resolve(dataUrl); return; }
+      const k = max / longest;
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.naturalWidth * k);
+      c.height = Math.round(img.naturalHeight * k);
+      c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height);
+      resolve(c.toDataURL('image/png'));
+    };
+    img.onerror = () => reject(new Error('Unreadable image'));
+    img.src = dataUrl;
+  });
+}
 
 const FG_SWATCHES = [
   '#000000', '#1f2937', '#a855f7', '#3b82f6',
@@ -250,6 +272,14 @@ export function QrMaker() {
     }
   }, []);
 
+  // A logo arrives as a file (picked or dropped) or as a pasted image. It
+  // turns the logo on, so pasting one is all it takes.
+  const applyLogo = useCallback((dataUrl: string, name: string) => {
+    setLogoSrc(dataUrl);
+    setLogoName(name);
+    setWithLogo(true);
+  }, []);
+
   const handleLogoFile = useCallback((file: File | null) => {
     if (!file) return;
     if (!file.type.startsWith('image/')) {
@@ -260,14 +290,59 @@ export function QrMaker() {
       setToast('Logo must be under 2 MB');
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      setLogoSrc(reader.result as string);
-      setLogoName(file.name);
+    blobToDataUrl(file).then((url) => applyLogo(url, file.name), () => setToast('Could not read logo file'));
+  }, [applyLogo]);
+
+  // Pasted logos are usually screenshots, which can be far larger than a
+  // logo needs; they're drawn down to LOGO_PASTE_MAX px so the QR stays light.
+  const handleLogoPaste = useCallback(async (dataUrl: string) => {
+    try {
+      applyLogo(await shrinkImage(dataUrl, LOGO_PASTE_MAX), 'Pasted image');
+      setToast('Logo pasted');
+    } catch {
+      setToast('Could not read that image');
+    }
+  }, [applyLogo]);
+
+  const pasteLogoFromClipboard = useCallback(async () => {
+    try {
+      const dataUrl = await readImageFromClipboard();
+      if (dataUrl) handleLogoPaste(dataUrl);
+      else setToast('No image on the clipboard');
+    } catch {
+      setToast('Clipboard blocked — press Ctrl/Cmd+V instead');
+    }
+  }, [handleLogoPaste]);
+
+  // Ctrl/Cmd+V with an image on the clipboard, while working in this tool,
+  // sets the logo. Text pastes (a URL into the link field) pass straight
+  // through. "Working in this tool" means focus is inside it, or the last
+  // click was — the page holds other tools that listen for paste too.
+  const lastPressInsideRef = useRef(false);
+  useEffect(() => {
+    const onDown = (e: PointerEvent) => {
+      lastPressInsideRef.current = !!pageRef.current?.contains(e.target as Node);
     };
-    reader.onerror = () => setToast('Could not read logo file');
-    reader.readAsDataURL(file);
-  }, []);
+    const onPaste = (e: ClipboardEvent) => {
+      const focus = document.activeElement;
+      const inside = focus && focus !== document.body
+        ? !!pageRef.current?.contains(focus)
+        : lastPressInsideRef.current;
+      if (!inside) return;
+      const hasImage = Array.from(e.clipboardData?.items ?? []).some((i) => i.kind === 'file' && i.type.startsWith('image/'));
+      if (!hasImage) return;
+      e.preventDefault();
+      imageFromPasteEvent(e).then((url) => { if (url) handleLogoPaste(url); }, () => setToast('Could not read that image'));
+    };
+    window.addEventListener('pointerdown', onDown, true);
+    window.addEventListener('paste', onPaste);
+    return () => {
+      window.removeEventListener('pointerdown', onDown, true);
+      window.removeEventListener('paste', onPaste);
+    };
+  }, [handleLogoPaste]);
+
+  const [logoDragOver, setLogoDragOver] = useState(false);
 
   const clearLogo = useCallback(() => {
     setLogoSrc(null);
@@ -494,15 +569,29 @@ export function QrMaker() {
             {withLogo && (
               <div className="qrm-logo-picker">
                 {!logoSrc ? (
-                  <button
-                    type="button"
-                    className="qrm-logo-drop"
-                    onClick={() => logoInputRef.current?.click()}
-                  >
-                    <span className="ico">⬆</span>
-                    <span>Pick a logo image</span>
-                    <small>PNG/SVG/JPG · up to 2 MB</small>
-                  </button>
+                  <>
+                    <button
+                      type="button"
+                      className={`qrm-logo-drop${logoDragOver ? ' is-over' : ''}`}
+                      onClick={() => logoInputRef.current?.click()}
+                      onDragOver={(e) => { e.preventDefault(); setLogoDragOver(true); }}
+                      onDragLeave={() => setLogoDragOver(false)}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        setLogoDragOver(false);
+                        handleLogoFile(e.dataTransfer.files?.[0] || null);
+                      }}
+                    >
+                      <span className="ico">⬆</span>
+                      <span>Pick, drop or paste a logo image</span>
+                      <small>PNG/SVG/JPG · up to 2 MB · Ctrl/Cmd+V to paste</small>
+                    </button>
+                    {CAN_READ_CLIPBOARD && (
+                      <button type="button" className="qrm-logo-paste" onClick={pasteLogoFromClipboard}>
+                        Paste image from clipboard
+                      </button>
+                    )}
+                  </>
                 ) : (
                   <div className="qrm-logo-loaded">
                     {/* A data URL from the viewer's own file, never a remote
@@ -511,7 +600,7 @@ export function QrMaker() {
                     <img src={logoSrc} alt="" className="qrm-logo-thumb" />
                     <div className="qrm-logo-meta">
                       <strong>{logoName}</strong>
-                      <small>Centered, ~22% of QR size</small>
+                      <small>Centered, ~22% of QR size · paste another to replace it</small>
                     </div>
                     <button type="button" className="qrm-logo-remove" onClick={clearLogo} aria-label="Remove logo">
                       ✕

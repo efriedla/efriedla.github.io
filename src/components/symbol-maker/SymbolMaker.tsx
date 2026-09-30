@@ -32,7 +32,7 @@ import {
 import { StylePastePanel } from './StylePastePanel';
 import { cropToDataUrl, loadImage } from './cropImage';
 import './SymbolMaker.css';
-import { CAN_READ_CLIPBOARD, blobToDataUrl } from './clipboardImage';
+import { CAN_READ_CLIPBOARD, blobToDataUrl } from '@/lib/clipboardImage';
 
 const DEFAULT_OUTLINE_THICKNESS = 4;
 

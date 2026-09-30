@@ -6,7 +6,7 @@ import {
   copyCanvasToClipboard,
   imageFromPasteEvent,
   readImageFromClipboard,
-} from './clipboardImage';
+} from '@/lib/clipboardImage';
 import { buildEdgeFadeMask, DEFAULT_EDGE_FADE, EdgeFadeOptions, FadeShape } from './edgeFade';
 import './BgRemoveModal.css';
 
