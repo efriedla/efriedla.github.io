@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { QrMaker } from "@/components/QrMaker";
 import { ToolEntry } from "@/components/ToolEntry";
+import { SymbolMakerTool } from "@/components/symbol-maker/SymbolMakerTool";
 
 export const metadata: Metadata = {
   title: "Tools",
   description:
-    "Small browser tools that do the whole job in the tab — starting with a QR code maker for links and calendar events.",
+    "Small browser tools that do the whole job in the tab: a QR code maker for links and calendar events, and a symbol maker for cutting out images and building icons.",
 };
 
 export default function ToolsPage() {
@@ -32,7 +33,24 @@ export default function ToolsPage() {
         >
           <QrMaker />
         </ToolEntry>
+
+        <ToolEntry
+          title="Symbol maker"
+          tagline="Remove a solid-colour background, add shapes and text, then copy or download at any size"
+        >
+          <SymbolMakerTool />
+        </ToolEntry>
       </div>
+
+      <p className="mt-10 mb-0 text-[0.9375rem] leading-relaxed text-ink-soft">
+        There are more tools in Clumpification, the app the Symbol maker came from.{" "}
+        <a
+          href="https://efriedla.github.io/Clumping-live/"
+          className="text-accent underline underline-offset-2"
+        >
+          See more tools there →
+        </a>
+      </p>
     </div>
   );
 }
